@@ -1,0 +1,90 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.openapitools:openapi-generator-gradle-plugin:7.6.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+apply plugin: 'org.openapi.generator'
+
+group = 'com.pe'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springAiVersion', "1.0.0")
+}
+
+dependencies {
+    // WebFlux (no Web)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Validación
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Base de datos reactiva
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    runtimeOnly 'io.r2dbc:r2dbc-h2'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Documentación OpenAPI para WebFlux
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "$rootDir/src/main/resources/order-api.yaml"
+    outputDir = "$buildDir/generated"
+    apiPackage = 'com.pe.ordermanagement.infrastructure.controller'
+    modelPackage = 'com.pe.ordermanagement.infrastructure.dto'
+    configOptions = [
+            reactive            : 'true',
+            useSpringBoot3      : 'true',
+            interfaceOnly       : 'true',
+            skipDefaultInterface: 'true'
+    ]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/src/main/java"
+        }
+    }
+}

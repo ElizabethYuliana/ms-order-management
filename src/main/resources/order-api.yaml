@@ -1,0 +1,196 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: http://localhost:8080
+info:
+  description: Order API
+  version: "1.0.0"
+  title: Order API
+  contact:
+    email: elizabeth.yuliana@hotmail.com
+tags:
+  - name: Orders
+    description: Endpoints to manage orders
+
+paths:
+  /orders:
+    post:
+      summary: Create a new order
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+        description: Inventory item to add
+      responses:
+        '201':
+          description: Orden creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Get all orders
+      operationId: listOrders
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+              type: integer
+              default: 10
+        - name: status
+          in: query
+          required: false
+          schema:
+              type: string
+              enum: [CREATED, CANCELLED]
+              default: CREATED
+        - name: fromDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: toDate
+          in: query
+          required: false
+          schema:
+              type: string
+              format: date
+      responses:
+        '200':
+          description: Order List
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaginatedOrdersResponse'
+
+  /orders/{id}:
+    get:
+      summary: Get Order by ID
+      operationId: getOrderById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '404':
+          description: Order Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Cancel Order by ID
+      operationId: cancelOrder
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+              type: string
+      responses:
+        '204':
+            description: Order Cancelled
+        '404':
+            description: Order Not Found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateOrderRequest:
+      type: object
+      required:
+        - customerId
+        - amount
+      properties:
+        customerId:
+          type: string
+          minLength: 1
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+        description:
+          type: string
+          maxLength: 200
+    OrderResponse:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        amount:
+          type: number
+          format: double
+        description:
+          type: string
+        status:
+          type: string
+          enum: [CREATED, CANCELLED]
+        createdAt:
+          type: string
+          format: date-time
+    PaginatedOrdersResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+              $ref: '#/components/schemas/OrderResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+
