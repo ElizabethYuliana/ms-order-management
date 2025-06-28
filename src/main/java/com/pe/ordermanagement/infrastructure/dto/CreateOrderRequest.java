@@ -6,7 +6,11 @@ import jakarta.annotation.Generated;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -14,30 +18,12 @@ import java.util.Objects;
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-06-26T00:31:39.613104100-05:00[America/Lima]", comments = "Generator version: 7.6.0")
+@Builder
 public class CreateOrderRequest {
 
   private String customerId;
-
-  private Double amount;
-
+  private BigDecimal amount;
   private String description;
-
-  public CreateOrderRequest() {
-    super();
-  }
-
-  /**
-   * Constructor with only required parameters
-   */
-  public CreateOrderRequest(String customerId, Double amount) {
-    this.customerId = customerId;
-    this.amount = amount;
-  }
-
-  public CreateOrderRequest customerId(String customerId) {
-    this.customerId = customerId;
-    return this;
-  }
 
   /**
    * Get customerId
@@ -54,11 +40,6 @@ public class CreateOrderRequest {
     this.customerId = customerId;
   }
 
-  public CreateOrderRequest amount(Double amount) {
-    this.amount = amount;
-    return this;
-  }
-
   /**
    * Get amount
    * minimum: 0.01
@@ -67,17 +48,12 @@ public class CreateOrderRequest {
   @NotNull @DecimalMin("0.01") 
   @Schema(name = "amount", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("amount")
-  public Double getAmount() {
+  public BigDecimal getAmount() {
     return amount;
   }
 
-  public void setAmount(Double amount) {
+  public void setAmount(BigDecimal amount) {
     this.amount = amount;
-  }
-
-  public CreateOrderRequest description(String description) {
-    this.description = description;
-    return this;
   }
 
   /**

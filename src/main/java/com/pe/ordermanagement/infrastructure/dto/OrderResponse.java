@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
+import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ import java.util.Objects;
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-06-26T00:31:39.613104100-05:00[America/Lima]", comments = "Generator version: 7.6.0")
+@Builder
 public class OrderResponse {
 
   private String id;
@@ -63,8 +66,7 @@ public class OrderResponse {
 
   private StatusEnum status;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime createdAt;
+  private LocalDateTime createdAt;
 
   public OrderResponse id(String id) {
     this.id = id;
@@ -166,7 +168,7 @@ public class OrderResponse {
     this.status = status;
   }
 
-  public OrderResponse createdAt(OffsetDateTime createdAt) {
+  public OrderResponse createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -178,11 +180,11 @@ public class OrderResponse {
   @Valid 
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("createdAt")
-  public OffsetDateTime getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(OffsetDateTime createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
